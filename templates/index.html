@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="AI-powered technical writing workspace using LangGraph"
+    >
+
+    <title>{{ page_title }}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/style.css') }}"
+    >
+</head>
+
+<body>
+
+    <!-- Background -->
+    <div class="ambient ambient-purple"></div>
+    <div class="ambient ambient-blue"></div>
+    <div class="ambient ambient-pink"></div>
+
+    <div class="app-layout">
+
+        <!-- =========================================
+             SIDEBAR
+        ========================================== -->
+        <aside class="sidebar">
+
+            <div class="sidebar-top">
+
+                <a href="/" class="brand">
+
+                    <div class="brand-logo">
+                        <span>✦</span>
+                    </div>
+
+                    <div class="brand-copy">
+                        <strong>WriteFlow</strong>
+                        <small>LangGraph Agent</small>
+                    </div>
+
+                </a>
+
+                <button
+                    id="newRunButton"
+                    class="new-run-button"
+                    type="button"
+                >
+                    <span class="plus-icon">＋</span>
+                    <span>New article</span>
+                </button>
+
+                <!-- Workflow -->
+                <nav class="workflow-menu">
+
+                    <div class="workflow-heading">
+                        <span>WORKFLOW</span>
+                        <span class="workflow-line"></span>
+                    </div>
+
+                    <div class="workflow-item">
+                        <div class="workflow-number active">01</div>
+
+                        <div>
+                            <strong>Understand request</strong>
+                            <small>Analyze topic</small>
+                        </div>
+                    </div>
+
+                    <div class="workflow-item">
+                        <div class="workflow-number">02</div>
+
+                        <div>
+                            <strong>Research sources</strong>
+                            <small>Gather information</small>
+                        </div>
+                    </div>
+
+                    <div class="workflow-item">
+                        <div class="workflow-number">03</div>
+
+                        <div>
+                            <strong>Create plan</strong>
+                            <small>Structure article</small>
+                        </div>
+                    </div>
+
+                    <div class="workflow-item">
+                        <div class="workflow-number">04</div>
+
+                        <div>
+                            <strong>Write sections</strong>
+                            <small>Generate content</small>
+                        </div>
+                    </div>
+
+                    <div class="workflow-item">
+                        <div class="workflow-number">05</div>
+
+                        <div>
+                            <strong>Generate visuals</strong>
+                            <small>Enhance article</small>
+                        </div>
+                    </div>
+
+                </nav>
+
+            </div>
+
+            <!-- Server -->
+            <div class="server-status">
+
+                <div
+                    id="healthDot"
+                    class="health-dot"
+                ></div>
+
+                <div class="server-info">
+                    <strong id="healthText">
+                        Checking server
+                    </strong>
+
+                    <small>
+                        FastAPI · LangGraph
+                    </small>
+                </div>
+
+                <span class="status-pulse"></span>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =========================================
+             MAIN CONTENT
+        ========================================== -->
+        <main class="main-content">
+
+            <!-- Top bar -->
+            <header class="topbar">
+
+                <div class="page-heading">
+
+                    <div class="breadcrumb">
+                        <span>Workspace</span>
+                        <span class="breadcrumb-arrow">/</span>
+                        <span>Article Generator</span>
+                    </div>
+
+                    <div class="title-row">
+
+                        <div>
+                            <h1>
+                                Build technical articles
+                            </h1>
+
+                            <p>
+                                Research, plan and write with your AI agent.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="topbar-right">
+
+                    <div class="agent-status">
+                        <span class="agent-status-dot"></span>
+                        AI Agent
+                    </div>
+
+                    <div
+                        id="runBadge"
+                        class="run-badge"
+                    >
+                        Ready
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- =====================================
+                 PROMPT COMPOSER
+            ====================================== -->
+            <section class="composer-card">
+
+                <div class="composer-top">
+
+                    <div class="composer-icon">
+                        <span>✦</span>
+                    </div>
+
+                    <div class="composer-heading">
+
+                        <div class="composer-title-row">
+
+                            <h2>
+                                What should I write?
+                            </h2>
+
+                            <span class="ai-label">
+                                AI POWERED
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Give your agent a topic and it will research,
+                            plan and create the complete article.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form id="runForm">
+
+                    <div class="textarea-wrapper">
+
+                        <textarea
+                            id="topicInput"
+                            maxlength="1000"
+                            rows="4"
+                            required
+                            placeholder="Describe the technical article you want to create..."
+                        ></textarea>
+
+                        <div class="textarea-footer">
+                            <span>
+                                <kbd>Enter</kbd>
+                                to run
+                            </span>
+
+                            <span id="characterCount">
+                                0 / 1000
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="composer-footer">
+
+                        <div class="examples">
+
+                            <span class="examples-label">
+                                Try an example
+                            </span>
+
+                            <div class="example-buttons">
+
+                                <button
+                                    type="button"
+                                    data-topic="Explain LangGraph subgraphs with a practical multi-agent example"
+                                >
+                                    LangGraph subgraphs
+                                </button>
+
+                                <button
+                                    type="button"
+                                    data-topic="Design a production-ready RAG system with PostgreSQL and LangGraph"
+                                >
+                                    Production RAG
+                                </button>
+
+                                <button
+                                    type="button"
+                                    data-topic="Latest practical developments in open-source AI agents"
+                                >
+                                    AI agent roundup
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                id="cancelButton"
+                                class="cancel-button"
+                                type="button"
+                                hidden
+                            >
+                                <span>■</span>
+                                Stop
+                            </button>
+
+                            <button
+                                id="runButton"
+                                class="run-button"
+                                type="submit"
+                            >
+                                <span>Run agent</span>
+                                <span class="run-arrow">→</span>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+
+            <!-- =====================================
+                 WORKSPACE
+            ====================================== -->
+            <section class="workspace-grid">
+
+
+                <!-- EXECUTION PANEL -->
+                <article class="panel-card execution-panel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-heading">
+
+                            <div class="panel-icon purple">
+                                <span>◉</span>
+                            </div>
+
+                            <div>
+                                <span class="panel-label">
+                                    EXECUTION
+                                </span>
+
+                                <h2>
+                                    Agent activity
+                                </h2>
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            id="progressRing"
+                            class="progress-ring"
+                            style="--progress: 0"
+                        >
+                            <div class="progress-inner">
+                                <span id="progressText">
+                                    0%
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="timeline"
+                        class="timeline"
+                    >
+
+                        <div
+                            id="activityEmpty"
+                            class="empty-state"
+                        >
+
+                            <div class="empty-icon">
+                                <span>⌁</span>
+                            </div>
+
+                            <h3>
+                                No active run
+                            </h3>
+
+                            <p>
+                                Start an article and your agent's
+                                activity will appear here.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- PLAN PANEL -->
+                <article class="panel-card plan-panel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-heading">
+
+                            <div class="panel-icon blue">
+                                <span>☷</span>
+                            </div>
+
+                            <div>
+                                <span class="panel-label">
+                                    STRATEGY
+                                </span>
+
+                                <h2>
+                                    Article plan
+                                </h2>
+                            </div>
+
+                        </div>
+
+                        <span
+                            id="taskCount"
+                            class="task-count"
+                        >
+                            0 tasks
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        id="planMeta"
+                        class="plan-meta"
+                        hidden
+                    ></div>
+
+
+                    <div
+                        id="planList"
+                        class="plan-list"
+                    >
+
+                        <div
+                            id="planEmpty"
+                            class="empty-state"
+                        >
+
+                            <div class="empty-icon blue">
+                                <span>☷</span>
+                            </div>
+
+                            <h3>
+                                Waiting for a plan
+                            </h3>
+
+                            <p>
+                                Your article structure will
+                                appear here after research.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- =====================================
+                 RESULT PANEL
+            ====================================== -->
+            <section
+                id="resultCard"
+                class="panel-card result-card"
+            >
+
+                <div class="panel-header result-header">
+
+                    <div class="panel-heading">
+
+                        <div class="panel-icon green">
+                            <span>✎</span>
+                        </div>
+
+                        <div>
+                            <span class="panel-label">
+                                DELIVERABLE
+                            </span>
+
+                            <h2>
+                                Generated article
+                            </h2>
+                        </div>
+
+                    </div>
+
+
+                    <div class="result-actions">
+
+                        <button
+                            id="copyButton"
+                            class="secondary-button"
+                            type="button"
+                            disabled
+                        >
+                            <span>⧉</span>
+                            Copy Markdown
+                        </button>
+
+                        <a
+                            id="downloadButton"
+                            class="secondary-button disabled"
+                            href="#"
+                            aria-disabled="true"
+                        >
+                            <span>↓</span>
+                            Download .md
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Tabs -->
+                <div class="result-tabs">
+
+                    <button
+                        id="previewTab"
+                        class="active"
+                        type="button"
+                    >
+                        Preview
+                    </button>
+
+                    <button
+                        id="markdownTab"
+                        type="button"
+                    >
+                        Markdown
+                    </button>
+
+                </div>
+
+
+                <!-- Content -->
+                <div class="result-content">
+
+                    <div
+                        id="articlePreview"
+                        class="article-preview"
+                    >
+
+                        <div
+                            id="resultEmpty"
+                            class="empty-state"
+                        >
+
+                            <div class="empty-icon green">
+                                <span>✎</span>
+                            </div>
+
+                            <h3>
+                                Your article will appear here
+                            </h3>
+
+                            <p>
+                                Run the agent to generate a
+                                complete technical article.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <pre
+                        id="markdownOutput"
+                        class="markdown-output"
+                        hidden
+                    ></pre>
+
+                </div>
+
+            </section>
+
+
+            <!-- Footer -->
+            <footer class="page-footer">
+
+                <span>
+                    WriteFlow
+                </span>
+
+                <span class="footer-separator">
+                    ·
+                </span>
+
+                <span>
+                    Powered by FastAPI + LangGraph
+                </span>
+
+            </footer>
+
+        </main>
+
+    </div>
+
+
+    <!-- Toast -->
+    <div
+        id="toast"
+        class="toast"
+        role="status"
+        aria-live="polite"
+    ></div>
+
+
+    <!-- Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Sanitization -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+
+    <!-- Application -->
+    <script
+        src="{{ url_for('static', path='js/app.js') }}"
+        defer
+    ></script>
+
+</body>
+</html>
