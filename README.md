@@ -40,7 +40,19 @@ The system does more than simply send a prompt to an LLM. It first decides wheth
 
 ---
 
+### 🔒 Security & Configuration
+1. **API Keys**: Copy `.env.example` to `.env` and fill in your keys.
+   - `TAVILY_API_KEY`: Required for web research.
+   - `DATABASE_URL`: Required for LangGraph persistence (PostgreSQL).
+2. **Local LLM**: Ensure Ollama is running with `qwen2.5:3b`.
+
+### 🧪 Running Tests
+```bash
+pytest
+```
+
 ## 🏗️ Architecture
+
 
 ```mermaid
 flowchart TD

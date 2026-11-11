@@ -216,3 +216,34 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+
+
+# Environment
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+
+# Generated article files in project root
+/*.md
+!/README.md
+!/LICENSE.md
+
+# Generated outputs
+outputs/
+generated/
+artifacts/
+
+# Generated notebooks
+*.ipynb
+
+# Tests
+tests/
+
+# IDE
+.vscode/
+.idea/
+
