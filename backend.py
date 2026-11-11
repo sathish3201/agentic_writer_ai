@@ -963,6 +963,20 @@ def merge_content(state: State) -> dict:
     }
 
 
+from pathlib import Path
+import re
+
+def save_article(title: str, markdown: str):
+    safe_title = re.sub(r'[<>:"/\\|?*]', "_", title).strip()
+    output_dir = Path("outputs")
+    output_dir.mkdir(exist_ok=True)
+
+    output_path = output_dir / f"{safe_title}.md"
+    output_path.write_text(markdown, encoding="utf-8")
+
+    print(f"Article saved: {output_path}")
+    return output_path
+
 # ============================================================
 # 11. Image planning
 # ============================================================
@@ -1117,6 +1131,7 @@ def decide_images(state: State) -> dict:
             for image in images
         ],
     }
+
 
 
 # ============================================================

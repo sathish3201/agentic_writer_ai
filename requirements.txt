@@ -11,7 +11,7 @@ psycopg_pool
 python-dotenv
 tavily-python
 requests
-langchain-checkpoint-postgres
+langgraph-checkpoint-postgres
 fastapi 
 uvicorn
 jinja2
